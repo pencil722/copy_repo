@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant Client
+    participant API
+    participant DB
+    participant SQS_completion_check
+    participant AsyncWorker as Async Worker
+
+    Client->>API: POST /storeCheckins (payload)
+    API-->>DB: write step data
+    API->>SQS_completion_check: publish completion check event
+    API-->>Client: 204 No Content
+
+    Note over SQS_completion_check,AsyncWorker: async worker consumes later
